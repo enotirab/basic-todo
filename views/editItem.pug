@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  div
+    h1 Edit Item
+    div
+      form(action=`/editItem/${item.id}` method="post")
+        label(for="description") Item Description
+        input(type="text" name="description" id="description" value=`${item.description}`)
+        button(type="Submit") Update Item
+
