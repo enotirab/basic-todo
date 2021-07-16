@@ -11,10 +11,6 @@ module.exports.listAll = async function (req, res, next) {
         let completeItems = todos.filter(item => item.complete);
         let incompleteItems = todos.filter(item => !item.complete);
 
-        console.log({
-            completeItems
-        });
-
         res.render('all_todos', {
             completeItems,
             incompleteItems
