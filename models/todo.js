@@ -16,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   Todo.init({
     description: DataTypes.STRING,
     complete: DataTypes.BOOLEAN,
+    completeText: {
+      type: DataTypes.VIRTUAL,
+      get(){
+        return this.complete ? 'Complete' : 'Incomplete'
+      }
+    }
   }, {
     sequelize,
     modelName: 'Todo',

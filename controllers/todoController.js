@@ -1,5 +1,5 @@
 
-const Todo = require('../models').Todo;
+const { Todo } = require('../models');
 
 
 module.exports.listAll = async function (req, res, next) {
@@ -33,6 +33,7 @@ module.exports.addNewItem = async (req, res) => {
     try {
 
         await Todo.create({description: req.body.description});
+        req.flash('Added new Item');
         res.redirect('/');
     } catch (err) {
 

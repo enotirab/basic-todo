@@ -10,7 +10,7 @@ mixin itemList(header, list)
         each item in list
           tr
             td= item.description
-            td= item.complete ? 'Complete' : 'Incomplete'
+            td= item.completeText
             td
               div.actions
                 form(action=`/deleteItem/${item.id}` method="POST")
