@@ -30,3 +30,6 @@ label, input{
 td{
     padding: 0.5rem 1rem;
 }
+.section-list{
+    margin-top: 2rem;
+}

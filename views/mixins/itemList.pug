@@ -1,0 +1,25 @@
+mixin itemList(header, list)
+  h1=header
+  table
+    thead
+      tr
+        th Description
+        th Status
+        th Actions
+    tbody
+        each item in list
+          tr
+            td= item.description
+            td= item.complete ? 'Complete' : 'Incomplete'
+            td
+              div.actions
+                form(action=`/deleteItem/${item.id}` method="POST")
+                  button(type="Submit") Delete
+                form(action=`editItem/${item.id}` method="GET")
+                  button.action-button Edit
+                if item.complete
+                  form(action=`/incompleteItem/${item.id}`, method="POST")
+                    button.action-button Mark as Incomplete
+                else
+                  form(action=`/completeItem/${item.id}`, method="POST")
+                    button.action-button Mark as Complete

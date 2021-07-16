@@ -3,9 +3,14 @@ var router = express.Router();
 
 
 
+const middlewareTest = ( req, res, next) => {
+    res.locals.moment =  require('moment');
+    next();
+};
+
 const todoController = require('../controllers/todoController');
 
-router.get('/', todoController.listAll);
+router.get('/', middlewareTest, todoController.listAll);
 router.get('/addItem', todoController.displayAddItem);
 router.post('/addItem', todoController.addNewItem);
 router.get('/editItem/:id', todoController.viewEditItem);

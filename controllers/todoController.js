@@ -1,16 +1,23 @@
 
-const client = require('../database/connection');
+const Todo = require('../models').Todo;
 
 
 module.exports.listAll = async function (req, res, next) {
 
     try {
 
-        const client = require('../database/connection');
-        let response = await client.query('SELECT * from todo_items order by complete, id DESC;');
+        const todos = await Todo.findAll();
 
-        res.render( 'all_todos', {
-            todoItems: response.rows
+        let completeItems = todos.filter(item => item.complete);
+        let incompleteItems = todos.filter(item => !item.complete);
+
+        console.log({
+            completeItems
+        });
+
+        res.render('all_todos', {
+            completeItems,
+            incompleteItems
         });
 
     } catch (err) {
@@ -27,21 +34,24 @@ module.exports.displayAddItem = (req, res) => {
 
 module.exports.addNewItem = async (req, res) => {
 
-    const client = require('../database/connection');
+    try {
 
-    let response = await client.query('insert into todo_items (description) values ($1);', [req.body.description]);
-    res.redirect('/');
+        await Todo.create({description: req.body.description});
+        res.redirect('/');
+    } catch (err) {
+
+        console.log('Error: ' + err);
+    }
 };
 
 
 module.exports.viewEditItem = async (req, res) => {
 
     try {
-        const client = require('../database/connection');
-        let response = await client.query('SELECT * from todo_items where id = $1;', [req.params.id]);
+        const todo = await Todo.findByPk(req.params.id);
+        res.render('editItem', {item: todo})
 
-        res.render('editItem', { item: response.rows[0] })
-    }catch(err){
+    } catch (err) {
         console.log('There was an error');
         console.log(err);
     }
@@ -51,9 +61,11 @@ module.exports.viewEditItem = async (req, res) => {
 
 module.exports.saveEditItem = async (req, res) => {
 
-    const client = require('../database/connection');
-
-    let response = await client.query('update todo_items set description = ($1) where id = $2;', [req.body.description, req.params.id]);
+    await Todo.update({ description: req.body.description}, {
+        where:{
+            id: req.params.id,
+        }
+    })
     res.redirect('/');
 };
 
@@ -62,9 +74,12 @@ module.exports.deleteItem = async (req, res) => {
 
     try {
 
-        const client = require('../database/connection');
-        let response = await client.query('delete from todo_items where id = $1;', [req.params.id]);
-    }catch(err){
+        await Todo.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+    } catch (err) {
         console.log("there was an error");
         console.log(err);
     }
@@ -76,9 +91,14 @@ module.exports.deleteItem = async (req, res) => {
 module.exports.makeItemComplete = async (req, res) => {
 
     try {
-        const client = require('../database/connection');
-        let response = await client.query('UPDATE todo_items SET complete = true where id = $1;', [req.params.id]);
-    }catch(err){
+
+        await Todo.update({ complete:  true}, {
+            where:{
+                id: req.params.id,
+            }
+        })
+
+    } catch (err) {
         console.log("there was an error");
         console.log(err);
     }
@@ -90,9 +110,13 @@ module.exports.makeItemComplete = async (req, res) => {
 module.exports.markeItemIncomplete = async (req, res) => {
 
     try {
-        const client = require('../database/connection');
-        let response = await client.query('UPDATE todo_items SET complete = false where id = $1;', [req.params.id]);
-    }catch(err){
+        await Todo.update({ complete:  false}, {
+            where:{
+                id: req.params.id,
+            }
+        })
+
+    } catch (err) {
         console.log("there was an error");
         console.log(err);
     }
