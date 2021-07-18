@@ -1,0 +1,18 @@
+extends layout
+
+block content
+
+  div.card
+    div.card-header Login
+
+    div.card-body.shadow-sm
+      form(action="/login" method="POST")
+        div.mb-3
+          label(for="email").form-label Email Address
+          input(type="email" name="email" id="email" required=true).form-control
+
+        div.mb-3
+          label(for="password").form-label Password
+          input(type="password" name="password" id="password" required=true).form-control
+
+        button(type="submit").btn.btn-success Login

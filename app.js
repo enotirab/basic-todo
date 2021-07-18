@@ -8,8 +8,13 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport');
+
 
 var app = express();
+
+//invoke our passport handler code (just run it)
+require('./handlers/passport')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,16 +30,22 @@ app.use(
     session({
         secret: 'keyboard cat',
         resave: false,
-        saveUninitialized: true,
-        cookie: {secure: true}
+        saveUninitialized: false,
     })
 );
 
-app.use(flash());
 
+//init passport
+app.use(passport.initialize());
+//authenticate on eaach request
+app.use(passport.authenticate('session'));
+
+
+app.use(flash());
 app.use((req, res, next) => {
     res.locals.sitename = 'Todos';
     res.locals.flashes = req.flash();
+    res.locals.user = req.user || null;
     next();
 });
 

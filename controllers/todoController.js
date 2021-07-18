@@ -6,6 +6,11 @@ module.exports.listAll = async function (req, res, next) {
 
     try {
 
+        console.log({
+            authed: req.isAuthenticated(),
+            user: req.user
+        });
+
         const todos = await Todo.findAll();
 
         let completeItems = todos.filter(item => item.complete);

@@ -1,6 +1,6 @@
 mixin itemList(header, list)
   h1=header
-  table
+  table.table
     thead
       tr
         th Description
@@ -10,16 +10,17 @@ mixin itemList(header, list)
         each item in list
           tr
             td= item.description
-            td= item.completeText
+            td
+              div(class=['badge', item.complete ? 'bg-success' : 'bg-primary'])= item.completeText
             td
               div.actions
                 form(action=`/deleteItem/${item.id}` method="POST")
-                  button(type="Submit") Delete
+                  button.btn.btn-danger(type="Submit") Delete
                 form(action=`editItem/${item.id}` method="GET")
-                  button.action-button Edit
+                  button.btn.btn-primary Edit
                 if item.complete
                   form(action=`/incompleteItem/${item.id}`, method="POST")
-                    button.action-button Mark as Incomplete
+                    button.btn.btn-warning Mark as Incomplete
                 else
                   form(action=`/completeItem/${item.id}`, method="POST")
-                    button.action-button Mark as Complete
+                    button.btn.btn-success Mark as Complete
